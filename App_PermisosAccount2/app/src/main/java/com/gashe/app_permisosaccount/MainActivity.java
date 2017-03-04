@@ -3,6 +3,8 @@ package com.gashe.app_permisosaccount;
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -11,26 +13,45 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import java.security.SecurityPermission;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String[] obtenerCorreosUsuario (){
 
-        String [] lista_correos = null;
+
+    private String obtenerCorreosUsuario (){
+
+        final SharedPreferences prefs = getSharedPreferences("pref", this.MODE_PRIVATE);
+
+        String lista_correos = null;
         Account [] lista_cuentas = null;
 
         AccountManager accountManager = (AccountManager)getSystemService(ACCOUNT_SERVICE);
         lista_cuentas = accountManager.getAccounts();
 
         for (Account cuenta: lista_cuentas){
-            if(cuenta.type.equals("com.google")){
+
                 Log.d(getClass().getCanonicalName(), "Cuenta correo: " + cuenta.name);
-            }else{
-                Log.d(getClass().getCanonicalName(), "Cuenta type: " + cuenta.type);
-            }
+
+                lista_correos += cuenta.name + ",";
+
         }
+
+        SharedPreferences.Editor editor_ =  prefs.edit();
+        editor_.putString("cuentas", lista_correos);
+        editor_.commit();
+
+
+
+        //Log.d(getClass().getCanonicalName(), "Cuentas: " + cuentasString);
 
 
         return lista_correos;
@@ -64,6 +85,25 @@ public class MainActivity extends AppCompatActivity {
         }else{
             pedirPermisos();
         }
+
+        Button button = (Button)findViewById(R.id.listarCuentas);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final SharedPreferences prefs = getSharedPreferences("pref", Context.MODE_PRIVATE);
+                String cuentasString = prefs.getString("cuentas", "");
+                String [] string_cuentas = cuentasString.split(",");
+                //List<String> listado_cuentas = Arrays.asList(string_cuentas);
+
+                ListAdapter listAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.fila, R.id.myText, string_cuentas);
+
+                ListView listView = (ListView) findViewById(R.id.listadoCuentas);
+                listView.setAdapter(listAdapter);
+
+
+
+            }
+        });
 
     }
 
