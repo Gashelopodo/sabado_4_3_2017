@@ -50,10 +50,6 @@ public class MainActivity extends AppCompatActivity {
         editor_.commit();
 
 
-
-        //Log.d(getClass().getCanonicalName(), "Cuentas: " + cuentasString);
-
-
         return lista_correos;
 
     }
@@ -90,10 +86,10 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                
                 final SharedPreferences prefs = getSharedPreferences("pref", Context.MODE_PRIVATE);
                 String cuentasString = prefs.getString("cuentas", "");
                 String [] string_cuentas = cuentasString.split(",");
-                //List<String> listado_cuentas = Arrays.asList(string_cuentas);
 
                 ListAdapter listAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.fila, R.id.myText, string_cuentas);
 
@@ -109,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         if((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)){
 
             Log.d(getClass().getCanonicalName(), "Permiso concedido");
