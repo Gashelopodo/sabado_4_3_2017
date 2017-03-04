@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+
                 final SharedPreferences prefs = getSharedPreferences("pref", Context.MODE_PRIVATE);
                 String cuentasString = prefs.getString("cuentas", "");
                 String [] string_cuentas = cuentasString.split(",");
